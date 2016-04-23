@@ -26,7 +26,7 @@ function deleteInventory(obj, name, id) {
 	
 	ajaxObj = {  
 			type: "DELETE",
-			url: "http://localhost:8080/cal-jws/v1/caliente/" + id,
+			url: "http://localhost:8080/cal-jws/api/v1/caliente/" + id,
 			data: JSON.stringify(obj), 
 			contentType:"application/json",
 			error: function(jqXHR, textStatus, errorThrown) {
