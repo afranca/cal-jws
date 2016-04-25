@@ -4,6 +4,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -145,7 +146,42 @@ public class CalienteRestController {
 		}
 		
 		return Response.ok(returnString).build();
-	}	
-	
+	}
+
+	@PUT
+	@Path("/{caliente_id}")
+	@Consumes({MediaType.APPLICATION_FORM_URLENCODED,MediaType.APPLICATION_JSON})
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateCaliente(@PathParam("caliente_id") int caliente_id ,String incomingData) throws Exception {
+				
+		String returnString = null;
+		JSONArray jsonArray = new JSONArray();
+		JSONObject jsonObject = new JSONObject();
+		CalienteDAO dao = new CalienteDAO();
+		
+		try {
+			Caliente model = (Caliente) ToModel.covert(incomingData, ToModel.CALIENTE);
+			
+			int http_code = dao.update(model );			
+			
+			if( http_code == 200 ) {
+				jsonObject.put("HTTP_CODE", "200");
+				jsonObject.put("MSG", "Item has been updated successfully");
+		
+				returnString = jsonArray.put(jsonObject).toString();
+			} else {
+				return Response.status(500).entity("Unable to enter Item").build();
+			}
+			
+			System.out.println( "returnString: " + returnString );
+			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(500).entity("Server was not able to process your request").build();
+		}
+		
+		return Response.ok(returnString).build();
+	}		
 	
 }

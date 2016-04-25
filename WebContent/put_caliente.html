@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>Rest Example: PUT</title>
+	
+	<script src="js/jquery-min.js"></script>
+	<script src="js/polyfill.js"></script>
+	<script src="js/put_caliente.js"></script>
+</head>
+<body>
+
+<h1>API Put Example</h1>
+
+<div id="get_inventory"></div>
+
+<br />
+<hr />
+
+<h1>Update Caliente</h1>
+
+<form id="put_example" name="put_example" action="#">
+<table border="0">
+<tr>
+	<td>caliente_name:</td>
+	<td id="caliente_name"> </td>
+	<td id="display_id"></td>
+	<td id="input_field"><input type="hidden" id="caliente_id" name="caliente_id" size="3"></td>
+</tr>
+<tr>
+	<td>new_name:</td>
+	<td colspan="3" id="new_name_tr"> <input type="text" id="new_name" name="new_name" size="30"> </td>	
+</tr>
+<tr>
+	<td colspan="4"><input type="submit" value="Submit"></td>
+</tr>
+</table>
+</form>
+
+<br />
+<div id="update_response"></div>
+
+
+<br /><br />
+</body>
+</html>

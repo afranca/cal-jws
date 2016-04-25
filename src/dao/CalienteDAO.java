@@ -66,6 +66,31 @@ public class CalienteDAO extends Datasource {
 		return 200;
 	}	
 
+	public int update(Caliente model) 	throws Exception {
+
+		PreparedStatement query = null;
+		Connection conn = null;
+		
+		try {
+
+			conn = getConnection();
+			query = conn.prepareStatement("update CALIENTE set NAME = ?");
+			
+			query.setString(1, model.getName());
+			
+			query.executeUpdate(); //note the new command for insert statement
+		
+		} catch(Exception e) {
+			e.printStackTrace();
+			return 500; //if a error occurs, return a 500
+		}
+		finally {
+			if (conn != null) conn.close();
+		}
+		
+		return 200;
+	}		
+	
 	public JSONArray findAll() throws Exception {
 		
 		PreparedStatement query = null;
