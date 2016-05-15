@@ -26,7 +26,8 @@ public class ToModel {
 		
 		if (modelClassName.equals(CALIENTE)){
 			Caliente caliente = new Caliente();
-			caliente.setName(partsData.optString("NAME"));			
+			caliente.setName(partsData.optString("caliente_name"));		
+			caliente.setId(partsData.optInt("caliente_id"));			
 			return caliente;
 			
 		} else if (modelClassName.equals(EXPENSE)){

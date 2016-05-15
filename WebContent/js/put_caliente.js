@@ -31,7 +31,7 @@ $(document).ready(function() {
 		e.preventDefault(); //cancel form submit
 		
 		var obj = $put_example.serializeObject()
-			, cal_id = $('#caliente_id').text(); //, NAME = $('#caliente_name').text();
+			, cal_id = $('#caliente_id').val(); //, NAME = $('#caliente_name').text();
 		
 		updateInventory(obj, cal_id);
 	});
