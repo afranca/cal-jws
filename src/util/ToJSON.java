@@ -78,7 +78,11 @@ public class ToJSON {
                     	 /*Debug*/ System.out.println("ToJson: FLOAT");
                      }
                      else if(rsmd.getColumnType(i)==java.sql.Types.INTEGER){
-                    	 obj.put(column_name, rs.getInt(column_name));
+                    	 if (column_name.equalsIgnoreCase("id"))                    		 
+                    		 obj.put("_"+column_name, rs.getInt(column_name));
+                    	 else
+                    		 obj.put(column_name, rs.getInt(column_name));
+                    	 
                     	 /*Debug*/ System.out.println("ToJson: INTEGER");
                      }
                      else if(rsmd.getColumnType(i)==java.sql.Types.NVARCHAR){

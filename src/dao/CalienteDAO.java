@@ -101,7 +101,8 @@ public class CalienteDAO extends Datasource {
 		
 		try {
 			conn = getConnection();
-			query = conn.prepareStatement("select ID, NAME, BALANCE, PAID_IN, PAYMENT from CALIENTE");
+			//query = conn.prepareStatement("select ID, NAME, BALANCE, PAID_IN, PAYMENT from CALIENTE");
+			query = conn.prepareStatement("select ID, NAME, BALANCE, PAYMENT from CALIENTE");
 			
 			ResultSet rs = query.executeQuery();
 			
@@ -133,7 +134,8 @@ public class CalienteDAO extends Datasource {
 		
 		try {
 			conn = getConnection();
-			query = conn.prepareStatement("select ID, NAME, BALANCE, PAID_IN, PAYMENT from CALIENTE where NAME = ?");
+			//query = conn.prepareStatement("select ID, NAME, BALANCE, PAID_IN, PAYMENT from CALIENTE where NAME = ?");
+			query = conn.prepareStatement("select ID, NAME, BALANCE, PAYMENT from CALIENTE where NAME = ?");
 			
 			query.setString(1, name); //protect against sql injection
 			
