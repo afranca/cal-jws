@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import model.Caliente;
 
 import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 
 import util.ToJSON;
 
@@ -123,6 +124,42 @@ public class CalienteDAO extends Datasource {
 		
 		return json;
 	}
+	
+	public JSONObject findById(String id) throws Exception {
+		
+		PreparedStatement query = null;
+		Connection conn = null;
+		
+		ToJSON converter = new ToJSON();
+		JSONObject jsonObj = new JSONObject();
+		
+		try {
+			conn = getConnection();
+			//query = conn.prepareStatement("select ID, NAME, BALANCE, PAID_IN, PAYMENT from CALIENTE where NAME = ?");
+			query = conn.prepareStatement("select ID, NAME, BALANCE, PAYMENT from CALIENTE where ID = ?");
+			
+			query.setInt(1, Integer.parseInt(id)); //protect against sql injection
+			
+			ResultSet rs = query.executeQuery();
+			
+			jsonObj = converter.toJSONObject(rs); 
+			query.close(); //close connection
+		}
+		catch(SQLException sqlError) {
+			sqlError.printStackTrace();
+			return jsonObj;
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return jsonObj;
+		}
+		finally {
+			if (conn != null) conn.close();
+		}
+		
+		return jsonObj;
+	}
+	
 	
 	public JSONArray findByName(String name) throws Exception {
 		

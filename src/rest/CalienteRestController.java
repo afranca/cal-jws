@@ -45,6 +45,37 @@ public class CalienteRestController {
 		return Response.ok(returnString).build();
 	}	
 	
+	@Path("/{id}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findCalienteById(@PathParam("id") String id)	throws Exception {
+				
+		String returnString = null;
+		//JSONArray json = new JSONArray();
+		JSONObject json = new JSONObject();
+		
+		try {
+			
+			//return a error is brand is missing from the url string
+			if(id == null || "".equals(id)) {
+				return Response.status(400).entity("Error: please specify parameter for this search").build();
+			}
+			
+			CalienteDAO dao = new CalienteDAO();
+			
+			json = dao.findById(id);
+			returnString = json.toString();
+			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(500).entity("Server was not able to process your request").build();
+		}
+		
+		return Response.ok(returnString).build();
+	}	
+	 
+	/*
 	@Path("/{name}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -73,7 +104,7 @@ public class CalienteRestController {
 		
 		return Response.ok(returnString).build();
 	}		
-	
+	*/
 	
 	
 	@POST
