@@ -7,3 +7,6 @@
 .settings/org.eclipse.jdt.core.prefs
 .settings/org.eclipse.wst.common.project.facet.core.xml
 *.class
+*.class
+WebContent/WEB-INF/classes/rest/CalienteRestController.class
+*.class
