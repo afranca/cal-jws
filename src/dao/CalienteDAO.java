@@ -25,9 +25,11 @@ public class CalienteDAO extends Datasource {
 		try {
 
 			conn = getConnection();
-			query = conn.prepareStatement("insert into CALIENTE (NAME) VALUES (?)");
+			query = conn.prepareStatement("insert into CALIENTE (NAME,PAYMENT,BALANCE) VALUES (?,?,?)");
 			
 			query.setString(1, model.getName());
+			query.setDouble(2, model.getPayment());
+			query.setDouble(3, model.getBalance());
 			
 			query.executeUpdate(); //note the new command for insert statement
 		
@@ -75,9 +77,12 @@ public class CalienteDAO extends Datasource {
 		try {
 
 			conn = getConnection();
-			query = conn.prepareStatement("update CALIENTE set NAME = ?");
+			query = conn.prepareStatement("update CALIENTE set NAME = ?, PAYMENT = ?, BALANCE = ? WHERE id=?");
 			
 			query.setString(1, model.getName());
+			query.setDouble(2, model.getPayment());
+			query.setDouble(3, model.getBalance());
+			query.setInt(4, model.getId());
 			
 			query.executeUpdate(); //note the new command for insert statement
 		

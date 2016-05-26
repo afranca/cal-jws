@@ -16,9 +16,9 @@ public class ToModel {
 	
 	public static ModelTemplate covert(String incomingData, String modelClassName){
 		
-		JSONObject partsData = null;
+		JSONObject jsonIncomingData = null;
 		try {
-			 partsData = new JSONObject(incomingData);
+			 jsonIncomingData = new JSONObject(incomingData);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -26,8 +26,11 @@ public class ToModel {
 		
 		if (modelClassName.equals(CALIENTE)){
 			Caliente caliente = new Caliente();
-			caliente.setName(partsData.optString("caliente_name"));		
-			caliente.setId(partsData.optInt("caliente_id"));			
+			
+			caliente.setId(jsonIncomingData.optInt("_id"));			
+			caliente.setName(jsonIncomingData.optString("name"));
+			caliente.setPayment(jsonIncomingData.optDouble("payment"));
+			caliente.setBalance(jsonIncomingData.optDouble("balance"));
 			return caliente;
 			
 		} else if (modelClassName.equals(EXPENSE)){
@@ -36,8 +39,8 @@ public class ToModel {
 			
 		} else if (modelClassName.equals(CALENTADA)){
 			Calentada calentada  = new Calentada();
-			calentada.setName(partsData.optString("NAME"));
-			calentada.setDescription(partsData.optString("DESCRIPTION"));
+			calentada.setName(jsonIncomingData.optString("NAME"));
+			calentada.setDescription(jsonIncomingData.optString("DESCRIPTION"));
 			//calentada.setDate(partsData.optString("DATE"));
 			return calentada;
 						

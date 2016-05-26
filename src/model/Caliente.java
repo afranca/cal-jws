@@ -94,5 +94,9 @@ public class Caliente extends ModelTemplate {
 		return getName() + "::" + getBalance();		
 	}
 
+	public void setPayment(double payment) {
+		this.payment = payment;
+	}
+
     
 }
