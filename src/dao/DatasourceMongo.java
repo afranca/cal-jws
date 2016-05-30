@@ -1,17 +1,14 @@
 package dao;
 
 import javax.naming.Context;
-import javax.naming.InitialContext;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 public class DatasourceMongo {
 	
-	private static MysqlDataSource  datasource = null;
 	private static Context context = null;
-	
+	private static MongoClient mongoClient = null;
 	   // JDBC driver name and database URL
 	   static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
 	   static final String DB_URL = "localhost";
@@ -19,23 +16,17 @@ public class DatasourceMongo {
 	   static final String DB_NAME = "calentada_db";
 	   
 	public static MongoClient MongoConn() throws Exception{
-		MongoClient mongoClient = null;
-		if (context!=null){
+		 
+		if (mongoClient!=null){
 			return mongoClient;
 		}
 		
-		try{			
-			if (mongoClient==null){				
-				context = new  InitialContext();				
-			}			
-			
+		try{
 			mongoClient = new MongoClient( "localhost" , 27017 ); 
-			
 			
 		} catch (Exception e){
 				System.out.println("DB Connection Problem:"+e);
 				System.exit(0);
-			
 		}
 		
 		return mongoClient;

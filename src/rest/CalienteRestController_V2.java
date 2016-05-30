@@ -32,7 +32,7 @@ public class CalienteRestController_V2 {
 		
 		try {
 			
-			CalienteDAO dao = new CalienteDAO();
+			CalienteMongoDAO dao = new CalienteMongoDAO();
 			
 			json = dao.findAll();
 			returnString = json.toString();

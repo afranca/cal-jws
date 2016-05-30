@@ -9,6 +9,7 @@ import util.ToJSON;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 
@@ -105,28 +106,31 @@ public class CalienteMongoDAO extends DatasourceMongo {
 		DB db = null;
 		
 		ToJSON converter = new ToJSON();
-		JSONArray json = new JSONArray();
+		JSONArray jsonArray = new JSONArray();
 		
 		try {
-			db = getConnection();
-			/*
-			query = conn.prepareStatement("select ID, NAME, BALANCE, PAID_IN, PAYMENT from CALIENTE");
+			db = getConnection();			
 			
-			ResultSet rs = query.executeQuery();
+			DBCollection mongoCollection = db.getCollection("caliente");
 			
-			json = converter.toJSONArray(rs);
-			query.close(); //close connection
-			*/
+			//DBObject doc = createDBObject(model);
+	        DBCursor cursor = mongoCollection.find();
+	        while (cursor.hasNext()) {
+	           DBObject obj = cursor.next();
+	           jsonArray.put(obj);
+	        }
+			
+
 		}
 		catch(Exception e) {
 			e.printStackTrace();
-			return json;
+			return jsonArray;
 		}
 		finally {
 			if (db != null) closeConnection();
 		}
 		
-		return json;
+		return jsonArray;
 	}
 	
 	public JSONArray findByName(String name) throws Exception {
