@@ -2,6 +2,7 @@ package dao;
 
 import model.Caliente;
 
+import org.bson.Document;
 import org.codehaus.jettison.json.JSONArray;
 
 import util.ToJSON;
@@ -12,6 +13,9 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoDatabase;
 
 
 
@@ -20,23 +24,19 @@ public class CalienteMongoDAO extends DatasourceMongo {
 	
 	public int create(Caliente model) 	throws Exception {
 
-		DB db = null;
+		MongoDatabase db = null;
 		
 		try {
 
 			db = getConnection();
-			DBCollection mongoCollection = db.getCollection("caliente");
+			//DBCollection mongoCollection = db.getCollection("caliente");			
+			MongoCollection<Document>  mongoCollection = db.getCollection("caliente");
 			
-			DBObject doc = createDBObject(model);
+			Document doc = createDBObject(model);
 			
 	        //create user
-	        WriteResult result = mongoCollection.insert(doc);
-	        /*
-	        System.out.println(result.getUpsertedId());
-	        System.out.println(result.getN());
-	        System.out.println(result.isUpdateOfExisting());
-	        System.out.println(result.getLastConcern());			
-			*/
+	        mongoCollection.insertOne(doc);
+	   
 
 		
 		} catch(Exception e) {
@@ -52,12 +52,12 @@ public class CalienteMongoDAO extends DatasourceMongo {
 	
 	public int delete(int id) 	throws Exception {
 
-		DB db = null;
+		MongoDatabase db = null;
 		
 		try {
 
 			db = getConnection();
-			DBCollection col = db.getCollection("caliente");
+			MongoCollection<Document>  mongoCollection = db.getCollection("caliente");
 			
 			
 //			query = conn.prepareStatement("delete from CALIENTE where id = ? ");
@@ -79,7 +79,7 @@ public class CalienteMongoDAO extends DatasourceMongo {
 
 	public int update(Caliente model) 	throws Exception {
 
-		DB db = null;
+		MongoDatabase db = null;
 		
 		try {
 
@@ -103,7 +103,7 @@ public class CalienteMongoDAO extends DatasourceMongo {
 	
 	public JSONArray findAll() throws Exception {
 		
-		DB db = null;
+		MongoDatabase db = null;
 		
 		ToJSON converter = new ToJSON();
 		JSONArray jsonArray = new JSONArray();
@@ -111,20 +111,21 @@ public class CalienteMongoDAO extends DatasourceMongo {
 		try {
 			db = getConnection();			
 			
-			DBCollection mongoCollection = db.getCollection("caliente");
+			MongoCollection<Document> collection = db.getCollection("caliente");
 			
-			//DBObject doc = createDBObject(model);
-	        DBCursor cursor = mongoCollection.find();
+	        //DBCursor cursor = mongoCollection.find();
+			MongoCursor<Document> cursor = collection.find().iterator();
 	        while (cursor.hasNext()) {
-	           DBObject obj = cursor.next();
+	        	Document obj = cursor.next();
 	           jsonArray.put(obj);
 	        }
-			
+ 	        cursor.close();
 
 		}
 		catch(Exception e) {
 			e.printStackTrace();
-			return jsonArray;
+			throw new Exception(e);
+			//return jsonArray;
 		}
 		finally {
 			if (db != null) closeConnection();
@@ -135,7 +136,7 @@ public class CalienteMongoDAO extends DatasourceMongo {
 	
 	public JSONArray findByName(String name) throws Exception {
 		
-		DB db = null;
+		MongoDatabase db = null;
 		
 		ToJSON converter = new ToJSON();
 		JSONArray json = new JSONArray();
@@ -165,7 +166,8 @@ public class CalienteMongoDAO extends DatasourceMongo {
 		return json;
 	}
 	
-    private static DBObject createDBObject(Caliente model) {
+    private static Document createDBObject(Caliente model) {
+    	/*
         BasicDBObjectBuilder docBuilder = BasicDBObjectBuilder.start();
                                  
         docBuilder.append("_id", model.getId());
@@ -173,6 +175,15 @@ public class CalienteMongoDAO extends DatasourceMongo {
         docBuilder.append("paidIn", model.getPaidIn());
         docBuilder.append("balance", model.getBalance());
         return docBuilder.get();
+        */
+    	
+        Document doc = new Document("_id", model.getId())
+        .append("name", model.getName())
+        .append("paidIn", model.getId())
+        .append("balance", model.getBalance());    
+        
+        return doc;
+        
     }	
 	
 

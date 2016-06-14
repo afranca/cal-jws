@@ -16,3 +16,4 @@ WebContent/WEB-INF/classes/dao/CalienteDAO.class
 WebContent/WEB-INF/classes/rest/CalienteRestController.class
 *.class
 *.class
+/build

@@ -4,6 +4,7 @@ import javax.naming.Context;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
+import com.mongodb.client.MongoDatabase;
 
 public class DatasourceMongo {
 	
@@ -15,8 +16,8 @@ public class DatasourceMongo {
 	   static final String DB_PORT = "27017";
 	   static final String DB_NAME = "calentada_db";
 	   
+	   /*		 
 	public static MongoClient MongoConn() throws Exception{
-		 
 		if (mongoClient!=null){
 			return mongoClient;
 		}
@@ -31,22 +32,30 @@ public class DatasourceMongo {
 		
 		return mongoClient;
 	}
+	    */	
 	
-	protected static DB getConnection(){
-		
-		DB db = null;
-		
-		try {
-			db = DatasourceMongo.MongoConn().getDB(DB_NAME);
-		}	catch(Exception e){
-			e.printStackTrace();
-		}	
+	protected static MongoDatabase getConnection(){
+		if (mongoClient!=null){
+			return mongoClient.getDatabase(DB_NAME);
+		}
+		MongoDatabase db = null;		
+		try{
+			mongoClient = new MongoClient( "localhost" , 27017 ); 
+			db = mongoClient.getDatabase(DB_NAME);
+			
+		} catch (Exception e){
+				System.out.println("DB Connection Problem:"+e);
+				System.exit(0);
+		}
 		return db;
 	}
 	
-	protected static void closeConnection(){
+	protected static void closeConnection(){		
+				
 		try {
-			DatasourceMongo.MongoConn().close();
+			if (mongoClient!=null){
+				mongoClient.close();
+			}
 		}	catch(Exception e){
 			e.printStackTrace();
 		}	

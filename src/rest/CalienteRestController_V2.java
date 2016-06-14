@@ -40,7 +40,7 @@ public class CalienteRestController_V2 {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			return Response.status(500).entity("Server was not able to process your request").build();
+			return Response.status(500).entity("Server was not able to process your request:"+e.getMessage()).build();
 		}
 		
 		return Response.ok(returnString).build();
