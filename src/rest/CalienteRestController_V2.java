@@ -61,7 +61,7 @@ public class CalienteRestController_V2 {
 				return Response.status(400).entity("Error: please specify name for this search").build();
 			}
 			
-			CalienteDAO dao = new CalienteDAO();
+			CalienteMongoDAO dao = new CalienteMongoDAO();
 			
 			json = dao.findByName(name);
 			returnString = json.toString();

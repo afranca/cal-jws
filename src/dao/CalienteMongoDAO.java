@@ -44,7 +44,7 @@ public class CalienteMongoDAO extends DatasourceMongo {
 			return 500; //if a error occurs, return a 500
 		}
 		finally {
-			if (db != null) closeConnection();
+			//if (db != null) closeConnection();
 		}
 		
 		return 200;
@@ -71,7 +71,7 @@ public class CalienteMongoDAO extends DatasourceMongo {
 			return 500; //if a error occurs, return a 500
 		}
 		finally {
-			if (db != null) closeConnection();
+			//if (db != null) closeConnection();
 		}
 		
 		return 200;
@@ -95,7 +95,7 @@ public class CalienteMongoDAO extends DatasourceMongo {
 			return 500; //if a error occurs, return a 500
 		}
 		finally {
-			if (db != null) closeConnection();
+			//if (db != null) closeConnection();
 		}
 		
 		return 200;
@@ -107,19 +107,18 @@ public class CalienteMongoDAO extends DatasourceMongo {
 		
 		ToJSON converter = new ToJSON();
 		JSONArray jsonArray = new JSONArray();
-		
+		MongoCursor<Document> cursor = null;
 		try {
 			db = getConnection();			
 			
 			MongoCollection<Document> collection = db.getCollection("caliente");
 			
-	        //DBCursor cursor = mongoCollection.find();
-			MongoCursor<Document> cursor = collection.find().iterator();
+			cursor = collection.find().iterator();
 	        while (cursor.hasNext()) {
 	        	Document obj = cursor.next();
 	           jsonArray.put(obj);
 	        }
- 	        cursor.close();
+ 	        
 
 		}
 		catch(Exception e) {
@@ -128,7 +127,9 @@ public class CalienteMongoDAO extends DatasourceMongo {
 			//return jsonArray;
 		}
 		finally {
-			if (db != null) closeConnection();
+			if (cursor != null) cursor.close();
+			/* Closing connection cause connection stale exception */
+			//if (db != null) closeConnection();
 		}
 		
 		return jsonArray;
@@ -138,44 +139,23 @@ public class CalienteMongoDAO extends DatasourceMongo {
 		
 		MongoDatabase db = null;
 		
-		ToJSON converter = new ToJSON();
-		JSONArray json = new JSONArray();
-		
+		JSONArray jsonArray = new JSONArray();
 		try {
 			db = getConnection();
 			
-			/*
-			query = conn.prepareStatement("select ID, NAME, BALANCE, PAID_IN, PAYMENT from CALIENTE where NAME = ?");
-			
-			query.setString(1, name); //protect against sql injection
-			
-			ResultSet rs = query.executeQuery();
-			
-			json = converter.toJSONArray(rs);
-			query.close(); //close connection
-			*/
+			MongoCollection<Document> collection = db.getCollection("caliente");
+        	Document obj = collection.find().first();
+        	jsonArray.put(obj);
 		}
 		catch(Exception e) {
 			e.printStackTrace();
-			return json;
+			return jsonArray;
 		}
-		finally {
-			if (db != null) closeConnection();
-		}
-		
-		return json;
+				
+		return jsonArray;
 	}
 	
     private static Document createDBObject(Caliente model) {
-    	/*
-        BasicDBObjectBuilder docBuilder = BasicDBObjectBuilder.start();
-                                 
-        docBuilder.append("_id", model.getId());
-        docBuilder.append("name", model.getName());
-        docBuilder.append("paidIn", model.getPaidIn());
-        docBuilder.append("balance", model.getBalance());
-        return docBuilder.get();
-        */
     	
         Document doc = new Document("_id", model.getId())
         .append("name", model.getName())
