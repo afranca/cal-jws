@@ -5,17 +5,11 @@ import model.Caliente;
 import org.bson.Document;
 import org.codehaus.jettison.json.JSONArray;
 
-import util.ToJSON;
-
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.WriteResult;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.result.UpdateResult;
+import static com.mongodb.client.model.Filters.*;
 
 
 
@@ -27,26 +21,15 @@ public class CalienteMongoDAO extends DatasourceMongo {
 		MongoDatabase db = null;
 		
 		try {
-
 			db = getConnection();
-			//DBCollection mongoCollection = db.getCollection("caliente");			
 			MongoCollection<Document>  mongoCollection = db.getCollection("caliente");
 			
 			Document doc = createDBObject(model);
-			
-	        //create user
 	        mongoCollection.insertOne(doc);
-	   
-
-		
 		} catch(Exception e) {
 			e.printStackTrace();
 			return 500; //if a error occurs, return a 500
 		}
-		finally {
-			//if (db != null) closeConnection();
-		}
-		
 		return 200;
 	}	
 	
@@ -84,12 +67,10 @@ public class CalienteMongoDAO extends DatasourceMongo {
 		try {
 
 			db = getConnection();
-//			query = conn.prepareStatement("update CALIENTE set NAME = ?");
-//			
-//			query.setString(1, model.getName());
-//			
-//			query.executeUpdate(); //note the new command for insert statement
-		
+			MongoCollection<Document> collection = db.getCollection("caliente");
+			Document toUpdate = createDBObject(model);
+			UpdateResult result = collection.updateOne(new Document("id",model.getId()), toUpdate );
+			System.out.println("Modified:"+result.getModifiedCount());
 		} catch(Exception e) {
 			e.printStackTrace();
 			return 500; //if a error occurs, return a 500
@@ -105,14 +86,11 @@ public class CalienteMongoDAO extends DatasourceMongo {
 		
 		MongoDatabase db = null;
 		
-		ToJSON converter = new ToJSON();
 		JSONArray jsonArray = new JSONArray();
 		MongoCursor<Document> cursor = null;
 		try {
 			db = getConnection();			
-			
 			MongoCollection<Document> collection = db.getCollection("caliente");
-			
 			cursor = collection.find().iterator();
 	        while (cursor.hasNext()) {
 	        	Document obj = cursor.next();
@@ -132,6 +110,26 @@ public class CalienteMongoDAO extends DatasourceMongo {
 			//if (db != null) closeConnection();
 		}
 		
+		return jsonArray;
+	}
+	
+	public JSONArray findById(String id) throws Exception {
+		
+		MongoDatabase db = null;		
+		JSONArray jsonArray = new JSONArray();
+		
+		try {
+			db = getConnection();
+			
+			MongoCollection<Document> collection = db.getCollection("caliente");
+        	Document obj = collection.find(eq("_id", id)).first();
+        	jsonArray.put(obj);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return jsonArray;
+		}
+				
 		return jsonArray;
 	}
 	
