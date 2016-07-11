@@ -21,6 +21,7 @@ public class ToModel {
 			 jsonIncomingData = new JSONObject(incomingData);
 		} catch (JSONException e) {
 			e.printStackTrace();
+			return null;
 		}
 		
 		

@@ -1,15 +1,16 @@
 package dao;
 
+import static com.mongodb.client.model.Filters.eq;
 import model.Caliente;
 
 import org.bson.Document;
 import org.codehaus.jettison.json.JSONArray;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.UpdateResult;
-import static com.mongodb.client.model.Filters.*;
 
 
 
@@ -24,7 +25,7 @@ public class CalienteMongoDAO extends DatasourceMongo {
 			db = getConnection();
 			MongoCollection<Document>  mongoCollection = db.getCollection("caliente");
 			
-			Document doc = createDBObject(model);
+			Document doc = createNewDBObject(model);
 	        mongoCollection.insertOne(doc);
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -68,7 +69,7 @@ public class CalienteMongoDAO extends DatasourceMongo {
 
 			db = getConnection();
 			MongoCollection<Document> collection = db.getCollection("caliente");
-			Document toUpdate = createDBObject(model);
+			Document toUpdate = createUpdateDBObject(model);
 			UpdateResult result = collection.updateOne(new Document("id",model.getId()), toUpdate );
 			System.out.println("Modified:"+result.getModifiedCount());
 		} catch(Exception e) {
@@ -122,8 +123,10 @@ public class CalienteMongoDAO extends DatasourceMongo {
 			db = getConnection();
 			
 			MongoCollection<Document> collection = db.getCollection("caliente");
-        	Document obj = collection.find(eq("_id", id)).first();
-        	jsonArray.put(obj);
+        	//Document obj = collection.find(eq("_id", id)).first();
+			MongoCursor<Document> cursor = collection.find(new BasicDBObject("_id", id)).iterator();
+        	System.out.println("cursor"+cursor);
+			//jsonArray.put(cursor.ge);
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -153,16 +156,26 @@ public class CalienteMongoDAO extends DatasourceMongo {
 		return jsonArray;
 	}
 	
-    private static Document createDBObject(Caliente model) {
+    private static Document createUpdateDBObject(Caliente model) {
     	
         Document doc = new Document("_id", model.getId())
         .append("name", model.getName())
-        .append("paidIn", model.getId())
+        .append("payment", model.getPayment())
         .append("balance", model.getBalance());    
         
         return doc;
         
     }	
+    
+    private static Document createNewDBObject(Caliente model) {
+    	
+        Document doc = new Document("name", model.getName())
+        .append("payment", model.getPayment())
+        .append("balance", model.getBalance());    
+        
+        return doc;
+        
+    }
 	
 
 }
